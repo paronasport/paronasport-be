@@ -1,4 +1,5 @@
-from pydantic import BaseModel, model_validator, field_validator
+from pydantic import BaseModel, field_validator
+from pydantic_core import PydanticCustomError
 from .player import PlayerCreate, PlayerResponse
 
 class TeamCreate(BaseModel):
@@ -15,5 +16,5 @@ class TeamResponse(BaseModel):
     @field_validator("name")
     def name_not_empty(cls, v):
         if not v.strip():
-            raise ValueError("Il nome non può essere vuoto")
+            raise PydanticCustomError("invalid_name", "Il nome non può essere vuoto")
         return v.strip()

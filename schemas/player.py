@@ -1,4 +1,5 @@
 from pydantic import BaseModel, field_validator, model_validator
+from pydantic_core import PydanticCustomError
 
 class PlayerCreate(BaseModel):
     name: str
@@ -9,25 +10,25 @@ class PlayerCreate(BaseModel):
     @field_validator("name")
     def name_not_empty(cls, v):
         if not v.strip():
-            raise ValueError("Il nome non può essere vuoto")
+            raise PydanticCustomError("invalid_name", "Il nome non può essere vuoto")
         return v.strip()
     
     @field_validator("surname")
     def surname_not_empty(cls, v):
         if not v.strip():
-            raise ValueError("Il cognome non può essere vuoto")
+            raise PydanticCustomError("invalid_surname", "Il cognome non può essere vuoto")
         return v.strip()
 
     @field_validator("ciId")
     def ciId_not_empty(cls, v):
         if not v.strip():
-            raise ValueError("Il codice identificativo non può essere vuoto")
+            raise PydanticCustomError("invalid_ciId", "Il codice identificativo non può essere vuoto")
         return v.strip()
     
     @field_validator("birthDate")
     def birthDate_not_empty(cls, v):
         if not v.strip():
-            raise ValueError("La data di nascita non può essere vuota")
+            raise PydanticCustomError("invalid_date", "La data di nascita non può essere vuota")
         return v.strip()
     
     @field_validator("birthDate")
@@ -36,7 +37,7 @@ class PlayerCreate(BaseModel):
             from datetime import datetime
             datetime.strptime(v, "%d/%m/%Y")
         except ValueError:
-            raise ValueError("La data di nascita deve essere nel formato DD/MM/YYYY")
+            raise PydanticCustomError("invalid_date", "La data di nascita deve essere nel formato DD/MM/YYYY")
         return v.strip()
 
 class PlayerResponse(BaseModel):

@@ -1,4 +1,6 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse
+from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from config import settings
 from routers import team, login
@@ -18,6 +20,14 @@ app.add_middleware(
 
 app.include_router(team.router)
 app.include_router(login.router)
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    error = exc.errors()[0]["msg"]
+    return JSONResponse(
+        status_code=422,
+        content={"detail": error}
+    )
 
 @app.head("/health")
 async def health():
