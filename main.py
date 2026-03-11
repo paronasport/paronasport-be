@@ -1,7 +1,10 @@
 from fastapi import FastAPI, Request
+from fastapi.responses import RedirectResponse
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
+import psutil
+import os
 from config import settings
 from routers import team, login
 
@@ -29,6 +32,16 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
         content={"detail": error}
     )
 
+@app.get("/")
+async def root():
+    return RedirectResponse(url="/docs")
+
 @app.head("/health")
 async def health():
     return {"status": "ok"}
+
+@app.get("/stats")
+async def stats():
+    process = psutil.Process(os.getpid())
+    ram_mb = process.memory_info().rss / 1024 / 1024
+    return {"ram_mb": round(ram_mb, 2)}
