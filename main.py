@@ -17,8 +17,9 @@ app.add_middleware(
                    "http://localhost:3000",
                    "http://localhost:5173",
                    ],
-    allow_methods=["GET", "POST", "HEAD"],
+    allow_methods=["*"],
     allow_headers=["*"],
+    allow_credentials=True,
 )
 
 app.include_router(team.router)
