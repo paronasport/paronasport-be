@@ -30,13 +30,16 @@ class TeamRepo:
             self.db.rollback()
             error_msg = str(e.orig).lower()
             if "unique" in error_msg:
-                if "teams.name" in error_msg:
-                    raise AlreadyExistsException("Nome squadra già esistente")
-                elif "players.ciid" in error_msg:
+                if "team_name_key" in error_msg:
+                    raise AlreadyExistsException("Squadra già creata")
+                elif "player_ciid_key" in error_msg:
                     raise AlreadyExistsException("Un giocatore è già presente, ricontrollare CI ID")
             raise Exception("Errore durante la creazione della squadra")
             
     
     def get_teams(self) -> list[Team]:
         return self.db.query(Team).all()
+    
+    def get_team_by_name(self, name: str) -> Team | None:
+        return self.db.query(Team).filter(Team.name == name).first()
         

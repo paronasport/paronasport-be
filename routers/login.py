@@ -5,6 +5,10 @@ from dependencies import get_auth_service
 
 router = APIRouter(prefix="/api/login", tags=["login"])
 
-@router.post("/", response_model=LoginResponse)
+@router.post("/admin", response_model=LoginResponse)
 async def login(data: LoginRequest, service: AuthService = Depends(get_auth_service)):
     return service.login(data)
+
+@router.post("/teams", response_model=LoginResponse)
+async def teams_login(data: LoginRequest, service: AuthService = Depends(get_auth_service)):
+    return service.teams_login(data)
