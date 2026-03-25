@@ -12,7 +12,7 @@ async def create_team(team_data: TeamCreate,
                       service: TeamService = Depends(get_team_service),
                       user: User = Depends(get_current_user)):
     try:
-        service.create_team(team_data)
+        service.create_team(team_data, user)
     except AlreadyExistsException as e:
         raise HTTPException(status_code=409, detail=str(e))
     except ValueError as e:

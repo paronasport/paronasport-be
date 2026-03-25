@@ -9,9 +9,10 @@ class TeamRepo:
     def __init__(self, db: Session):
         self.db = db
 
-    def create_team(self, team_data: TeamCreate) -> None:
+    def create_team(self, team_data: TeamCreate, user_id: str) -> None:
         db_team = Team(
             name=team_data.name,
+            user_id=user_id,
             players=[
                 Player(
                     name=player.name,

@@ -25,8 +25,7 @@ class AuthService:
         if not user or not verify_password(data.password, str(user.hashed_password)):
             raise HTTPException(status_code=401, detail="Credenziali non valide")
         
-        team = self.team_repo.get_team_by_name(str(data.username))
-        if team:
+        if user.team:
             raise HTTPException(status_code=401, detail="Squadra già creata")
         
         token = create_token({"sub": user.id, "username": user.username, "role": user.role})
